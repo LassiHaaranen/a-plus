@@ -34,6 +34,7 @@ class ExerciseGrader(SimpleHTTPServer.SimpleHTTPRequestHandler):
       self.end_headers()
       self.wfile.write(response)
 
+
   # On POSTs get the answer, grade it and return the results
   def do_POST(self):
     length = int(self.headers.getheader('content-length'))
@@ -57,7 +58,7 @@ class ExerciseGrader(SimpleHTTPServer.SimpleHTTPRequestHandler):
       self.wfile.write(response)
 
     # Attachment exercise. Note that the file is only stored in A+ 
-    if "/attachment_exercise/" in self.path:
+    elif "/attachment_exercise/" in self.path:
       response = '<html><head>\n' +\
                   '<meta name="points" value="0" />\n' +\
                   '<meta name="max-points" value="100" />\n' +\
@@ -70,6 +71,13 @@ class ExerciseGrader(SimpleHTTPServer.SimpleHTTPRequestHandler):
       self.send_header("Content-Length", len(response))
       self.end_headers()
       self.wfile.write(response)
+
+    # Demonstrating hook functionality
+    elif "/hook" in self.path:
+      print "POST Hook!", self.path
+      print "postvars:", postvars
+      self.send_response(200)
+
 
 httpd = SocketServer.TCPServer(("", PORT), ExerciseGrader)
 print "Serving at port:", PORT
