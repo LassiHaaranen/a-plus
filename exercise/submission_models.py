@@ -191,6 +191,11 @@ class Submission(models.Model):
         # Finally check that the grade is in bounds after all the math.
         assert 0 <= self.grade <= self.exercise.max_points
 
+    def scale_grade_to(self, percentage):
+        percentage = float(percentage)/100
+        self.grade = round(max(self.grade*percentage,0))
+        self.grade = min(self.grade,self.exercise.max_points)
+
     def set_waiting(self):
         self.status = self.STATUS_WAITING
 
